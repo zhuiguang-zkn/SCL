@@ -1,12 +1,33 @@
 embedding_size: 64
 feat_embed_dim: 64
 
-n_layers: [1, 2]
-dropout: [0.3, 0.5]
-reg_weight: [0.1, 0.01]
+# n_layers: [1, 2]
+# dropout: [0.3, 0.5]
+# reg_weight: [0.1, 0.01]
 cl_weight: 2.0
 
+n_layers: [2]
+dropout: [0.5]
+reg_weight: [0.01]   # use the best parameters for test
+
+add_encoder: False
 use_neg_sampling: False
+fusion_feature: True
+remove_v_t: True
 
 hyper_parameters: ["n_layers", "reg_weight", "dropout"]
 
+
+
+
+
+
+# 目前进行的实验， 在对比学习的时候多加一个encoder， 损失很快就降的很低， 效果很差，应该是坍缩了
+
+# 实验上的结果来看， 每个模态维护一个predictor的做法也并不好。 通过多个模态来共享一个predictor, 应该反而能把多个模态的信息结合起来。
+
+# 尝试将视觉和语言的特征融合（单层transfomer），相当于多加一个fusion_vector， 没有看到明显的提升
+
+# 尝试将视觉和语言的特征融合（单层transformer）， 同时去掉原本的vision, text 的特征， 得到的结果和使用vision , text 原本的特征差别不大
+
+# 在得到online vector 的时候，多加一个dropout， 效果很差， 这是为什么呢（因为变化确实很小）？基于上面的观察， 使用Simsiam 的方法来对比学习，确实训不好。

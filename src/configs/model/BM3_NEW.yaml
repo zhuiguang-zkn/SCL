@@ -1,0 +1,29 @@
+embedding_size: 64
+feat_embed_dim: 64
+
+# n_layers: [1, 2]
+# dropout: [0.3, 0.5]
+# reg_weight: [0.1, 0.01]
+cl_weight: 2.0
+
+n_layers: [2]
+dropout: [0.5]
+reg_weight: [0.01]   # use the best parameters for test
+
+add_encoder: False
+use_neg_sampling: False
+fusion_feature: False
+remove_v_t: False
+
+hyper_parameters: ["n_layers", "reg_weight", "dropout"]
+
+
+
+
+
+
+# 目前进行的实验， 在对比学习的时候多加一个encoder， 损失很快就降的很低， 效果很差，应该是坍缩了
+
+# 尝试将视觉和语言的特征融合（单层transfomer），相当于多加一个fusion_vector， 没有看到明显的提升
+
+# 尝试将视觉和语言的特征融合（单层transformer）， 同时去掉原本的vision, text 的特征， 

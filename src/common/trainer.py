@@ -150,6 +150,15 @@ class Trainer(AbstractTrainer):
                 loss = sum(losses)
                 loss_tuple = tuple(per_loss.item() for per_loss in losses)
                 total_loss = loss_tuple if total_loss is None else tuple(map(sum, zip(total_loss, loss_tuple)))
+            elif isinstance(losses, dict):  # for simsiam loss debug
+                loss = losses['loss']
+                total_loss = loss.item() if total_loss is None else total_loss + loss.item()
+                
+                for key in losses.keys():
+                    losses[key]=losses[key].item()
+            
+                self.logger.info(str(losses))
+                
             else:
                 loss = losses
                 total_loss = losses.item() if total_loss is None else total_loss + losses.item()

@@ -1,0 +1,15 @@
+embedding_size: 256
+feat_embed_dim: 256
+
+n_layers: [1, 2]
+dropout: [0.5, 0.7]
+reg_weight: [0.01]
+intra_weight: [0.5, 1]
+
+use_neg_sampling: False
+return_dict_loss: False
+use_one_predictor: True
+
+hyper_parameters: ["n_layers", "reg_weight", "dropout", "intra_weight"]
+
+

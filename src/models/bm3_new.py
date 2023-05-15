@@ -66,9 +66,10 @@ class TransformerFusion(nn.Module):
         return fused_feats
 
 
-class BM3(GeneralRecommender):
+# 生成online embedding 的时候， 额外加一个dropout操作
+class BM3_NEW(GeneralRecommender):
     def __init__(self, config, dataset):
-        super(BM3, self).__init__(config, dataset)
+        super(BM3_NEW, self).__init__(config, dataset)
 
         self.embedding_dim = config['embedding_size']
         self.feat_embed_dim = config['embedding_size']
@@ -190,7 +191,7 @@ class BM3(GeneralRecommender):
         if self.add_encoder:
             u_online, i_online = self.predictor(self.encoder(u_online_ori)), self.predictor(self.encoder(i_online_ori))
         else:
-            u_online, i_online = self.predictor(u_online_ori), self.predictor(i_online_ori)
+            u_online, i_online = self.predictor(F.dropout(u_online_ori)), self.predictor(F.dropout(i_online_ori))
 
         users, items = interactions[0], interactions[1]
         u_online = u_online[users, :]
@@ -203,7 +204,7 @@ class BM3(GeneralRecommender):
             if self.add_encoder:
                 t_feat_online = self.predictor(self.encoder(t_feat_online))
             else:
-                t_feat_online = self.predictor(t_feat_online)
+                t_feat_online = self.predictor(F.dropout(t_feat_online))
             t_feat_online = t_feat_online[items, :]
             t_feat_target = t_feat_target[items, :]
             loss_t = 1 - cosine_similarity(t_feat_online, i_target.detach(), dim=-1).mean()
@@ -212,7 +213,7 @@ class BM3(GeneralRecommender):
             if self.add_encoder:
                 v_feat_online = self.predictor(self.encoder(v_feat_online))
             else:
-                v_feat_online = self.predictor(v_feat_online)
+                v_feat_online = self.predictor(F.dropout(v_feat_online))
             v_feat_online = v_feat_online[items, :]
             v_feat_target = v_feat_target[items, :]
             loss_v = 1 - cosine_similarity(v_feat_online, i_target.detach(), dim=-1).mean()
@@ -221,7 +222,7 @@ class BM3(GeneralRecommender):
             if self.add_encoder:
                 f_feat_online = self.predictor(self.encoder(f_feat_online))
             else:
-                f_feat_online = self.predictor(f_feat_online)
+                f_feat_online = self.predictor(F.dropout(f_feat_online))
             f_feat_online = f_feat_online[items, :]
             f_feat_target = f_feat_target[items, :]
             loss_f = 1 - cosine_similarity(f_feat_online, i_target.detach(), dim=-1).mean()

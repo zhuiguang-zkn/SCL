@@ -44,7 +44,7 @@ def quick_start(model, dataset, config_dict, save_model=True):
 
     ############ Dataset loadded, run model
     hyper_ret = []
-    val_metric = config['valid_metric'].lower()
+    val_metric = config['valid_metric'].lower() # Recall@20
     best_test_value = 0.0
     idx = best_test_idx = 0
 
